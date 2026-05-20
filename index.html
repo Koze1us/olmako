@@ -47,16 +47,12 @@
   }
 
   .nav-logo {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: var(--white);
-    letter-spacing: -0.5px;
     text-decoration: none;
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center;
   }
 
-  .nav-logo svg { display: block; }
+  .nav-logo img { display: block; transition: opacity 0.2s; }
+  .nav-logo img:hover { opacity: 0.8; }
 
   .nav-links {
     display: flex; gap: 2.5rem; list-style: none;
@@ -69,10 +65,23 @@
     text-transform: uppercase;
     color: var(--steel);
     text-decoration: none;
-    transition: color 0.2s;
+    transition: color 0.25s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 2px;
+    background: var(--purple);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
   }
 
   .nav-links a:hover { color: var(--purple); }
+  .nav-links a:hover::after { transform: scaleX(1); }
 
   .nav-cta {
     font-size: 0.8rem;
@@ -86,10 +95,14 @@
     border-radius: 4px;
     cursor: pointer;
     text-decoration: none;
-    transition: background 0.2s, transform 0.15s;
+    transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
   }
 
-  .nav-cta:hover { background: #5a38e8; transform: translateY(-1px); }
+  .nav-cta:hover {
+    background: #5a38e8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(111,75,255,0.35);
+  }
 
   /* ── HERO ── */
   #hero {
@@ -101,26 +114,50 @@
     overflow: hidden;
   }
 
-  /* Geometric background lines */
   #hero::before {
     content: '';
     position: absolute; inset: 0;
+    background-image: url('hero-bg.jpg');
+    background-size: cover;
+    background-position: center 40%;
+    opacity: 0.2;
+    pointer-events: none;
+  }
+
+  #hero::after {
+    content: '';
+    position: absolute; inset: 0;
     background-image:
-      linear-gradient(rgba(111,75,255,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(111,75,255,0.06) 1px, transparent 1px);
+      linear-gradient(rgba(111,75,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(111,75,255,0.05) 1px, transparent 1px);
     background-size: 64px 64px;
     pointer-events: none;
   }
 
-  /* Purple glow orb */
-  #hero::after {
-    content: '';
+  .hero-image-panel {
     position: absolute;
-    width: 600px; height: 600px;
-    right: -100px; top: 50%;
-    transform: translateY(-50%);
-    background: radial-gradient(circle, rgba(111,75,255,0.18) 0%, transparent 70%);
-    pointer-events: none;
+    top: 0; right: 0;
+    width: 42%; height: 100%;
+    overflow: hidden;
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-image-panel { display: block; }
+    .hero-inner { max-width: 56%; }
+  }
+
+  .hero-image-panel img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    opacity: 0.5;
+  }
+
+  .hero-image-panel::before {
+    content: '';
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(to right, #12121E 0%, transparent 35%),
+                linear-gradient(to top, #12121E 0%, transparent 20%);
   }
 
   .hero-inner {
@@ -186,11 +223,15 @@
     padding: 0.9rem 2.2rem;
     border: none; border-radius: 4px;
     cursor: pointer; text-decoration: none;
-    transition: background 0.2s, transform 0.15s;
+    transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
     display: inline-block;
   }
 
-  .btn-primary:hover { background: #5a38e8; transform: translateY(-2px); }
+  .btn-primary:hover {
+    background: #5a38e8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(111,75,255,0.4);
+  }
 
   .btn-outline {
     background: transparent;
@@ -204,13 +245,14 @@
     border: 1px solid rgba(255,255,255,0.2);
     border-radius: 4px;
     cursor: pointer; text-decoration: none;
-    transition: border-color 0.2s, color 0.2s;
+    transition: border-color 0.25s, color 0.25s, background 0.25s;
     display: inline-block;
   }
 
   .btn-outline:hover {
     border-color: var(--purple-mid);
     color: var(--white);
+    background: rgba(111,75,255,0.1);
   }
 
   .hero-stats {
@@ -220,14 +262,17 @@
     padding-top: 2.5rem;
   }
 
-  .stat-item { }
   .stat-num {
     font-family: var(--font-display);
     font-size: 2rem;
     font-weight: 700;
     color: var(--white);
     line-height: 1;
+    transition: color 0.25s;
   }
+
+  .stat-item:hover .stat-num { color: var(--purple-mid); }
+
   .stat-label {
     font-size: 0.75rem;
     letter-spacing: 0.12em;
@@ -301,6 +346,7 @@
     padding: 2.5rem;
     transition: background 0.25s;
     position: relative;
+    cursor: default;
   }
 
   .service-card:hover { background: #faf9ff; }
@@ -324,7 +370,10 @@
     letter-spacing: 0.2em;
     color: var(--purple);
     margin-bottom: 1.2rem;
+    transition: letter-spacing 0.25s;
   }
+
+  .service-card:hover .service-num { letter-spacing: 0.3em; }
 
   .service-card h3 {
     font-family: var(--font-display);
@@ -333,7 +382,10 @@
     color: var(--black);
     margin-bottom: 0.9rem;
     line-height: 1.25;
+    transition: color 0.25s;
   }
+
+  .service-card:hover h3 { color: var(--purple); }
 
   .service-card p {
     font-size: 0.9rem;
@@ -355,10 +407,29 @@
     background: var(--purple-light);
     padding: 3px 10px;
     border-radius: 3px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .service-card:hover .tag {
+    background: var(--purple);
+    color: var(--white);
   }
 
   /* ── SECTORS ── */
-  #sectors { background: var(--black); }
+  #sectors {
+    background: var(--black);
+    position: relative;
+  }
+
+  #sectors::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url('sectors-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.08;
+    pointer-events: none;
+  }
 
   #sectors h2 { color: var(--white); }
   #sectors .section-lead { color: rgba(255,255,255,0.45); }
@@ -371,15 +442,20 @@
     margin-top: 3.5rem;
     border-radius: 8px;
     overflow: hidden;
+    position: relative; z-index: 1;
   }
 
   .sector-item {
     background: rgba(255,255,255,0.03);
     padding: 2rem 1.8rem;
-    transition: background 0.2s;
+    transition: background 0.25s, transform 0.25s;
+    cursor: default;
   }
 
-  .sector-item:hover { background: rgba(111,75,255,0.1); }
+  .sector-item:hover {
+    background: rgba(111,75,255,0.15);
+    transform: scale(1.02);
+  }
 
   .sector-icon {
     width: 36px; height: 36px;
@@ -387,8 +463,10 @@
     border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 1rem;
-    font-size: 1rem;
+    transition: background 0.25s;
   }
+
+  .sector-item:hover .sector-icon { background: rgba(111,75,255,0.35); }
 
   .sector-item h4 {
     font-family: var(--font-body);
@@ -397,7 +475,10 @@
     color: var(--white);
     letter-spacing: 0.02em;
     line-height: 1.4;
+    transition: color 0.25s;
   }
+
+  .sector-item:hover h4 { color: var(--purple-mid); }
 
   /* ── WHY OLMAKO ── */
   #why { background: var(--white); }
@@ -416,8 +497,11 @@
     display: flex; gap: 1.2rem;
     padding-bottom: 1.8rem;
     border-bottom: 1px solid var(--smoke);
+    transition: transform 0.25s;
+    cursor: default;
   }
 
+  .why-item:hover { transform: translateX(6px); }
   .why-item:last-child { border-bottom: none; padding-bottom: 0; }
 
   .why-marker {
@@ -426,9 +510,11 @@
     border-radius: 4px;
     display: flex; align-items: center; justify-content: center;
     margin-top: 2px;
+    transition: background 0.25s;
   }
 
-  .why-marker svg { display: block; }
+  .why-item:hover .why-marker { background: var(--purple); }
+  .why-item:hover .why-marker svg path { stroke: white; }
 
   .why-item h4 {
     font-family: var(--font-body);
@@ -436,8 +522,10 @@
     font-weight: 500;
     color: var(--black);
     margin-bottom: 0.3rem;
-    letter-spacing: 0.01em;
+    transition: color 0.25s;
   }
+
+  .why-item:hover h4 { color: var(--purple); }
 
   .why-item p {
     font-size: 0.88rem;
@@ -471,17 +559,18 @@
     margin-bottom: 1.5rem;
   }
 
-  .delivery-phases {
-    display: flex; flex-direction: column; gap: 0;
-    position: relative; z-index: 1;
-  }
+  .delivery-phases { display: flex; flex-direction: column; gap: 0; position: relative; z-index: 1; }
 
   .phase {
     display: flex; gap: 1rem; align-items: flex-start;
     padding: 1rem 0;
     border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.2s, padding-left 0.25s;
+    border-radius: 4px;
+    cursor: default;
   }
 
+  .phase:hover { padding-left: 8px; }
   .phase:last-child { border-bottom: none; }
 
   .phase-dot {
@@ -489,13 +578,19 @@
     background: var(--purple);
     border-radius: 50%;
     margin-top: 8px; flex-shrink: 0;
+    transition: transform 0.25s;
   }
+
+  .phase:hover .phase-dot { transform: scale(1.5); }
 
   .phase-name {
     font-size: 0.85rem;
     font-weight: 500;
     color: rgba(255,255,255,0.8);
+    transition: color 0.25s;
   }
+
+  .phase:hover .phase-name { color: var(--purple-mid); }
 
   .phase-desc {
     font-size: 0.78rem;
@@ -504,8 +599,178 @@
     font-weight: 300;
   }
 
+  /* ── PRODUCTS ── */
+  #products { background: var(--canvas); }
+
+  .products-intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: end;
+    margin-bottom: 4rem;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .product-card {
+    border: 1px solid var(--smoke);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    background: var(--white);
+  }
+
+  .product-card:hover {
+    border-color: rgba(111,75,255,0.4);
+    box-shadow: 0 8px 32px rgba(111,75,255,0.1);
+    transform: translateY(-4px);
+  }
+
+  /* ── CAROUSEL ── */
+  .carousel {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: #0a0a12;
+  }
+
+  .carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s ease;
+  }
+
+  .carousel-track img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+    transition: opacity 0.3s;
+  }
+
+  .carousel-btn {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    background: rgba(18,18,30,0.7);
+    border: 1px solid rgba(111,75,255,0.3);
+    color: white;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    transition: background 0.2s, border-color 0.2s;
+    z-index: 2;
+  }
+
+  .carousel-btn:hover { background: var(--purple); border-color: var(--purple); }
+  .carousel-btn.prev { left: 10px; }
+  .carousel-btn.next { right: 10px; }
+
+  .carousel-dots {
+    position: absolute;
+    bottom: 8px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 5px; z-index: 2;
+  }
+
+  .carousel-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .carousel-dot.active {
+    background: var(--purple);
+    transform: scale(1.3);
+  }
+
+  .product-body { padding: 2rem; }
+
+  .product-icon {
+    width: 44px; height: 44px;
+    background: var(--purple-light);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.2rem;
+    transition: background 0.25s;
+  }
+
+  .product-card:hover .product-icon { background: var(--purple); }
+  .product-card:hover .product-icon svg circle,
+  .product-card:hover .product-icon svg path,
+  .product-card:hover .product-icon svg rect { stroke: white; }
+
+  .product-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--black);
+    margin-bottom: 0.7rem;
+    transition: color 0.25s;
+  }
+
+  .product-card:hover h3 { color: var(--purple); }
+
+  .product-card p {
+    font-size: 0.88rem;
+    color: var(--steel);
+    line-height: 1.75;
+    font-weight: 300;
+    margin-bottom: 1.2rem;
+  }
+
+  .product-specs { display: flex; flex-direction: column; gap: 5px; }
+
+  .product-spec {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.78rem;
+    color: var(--steel);
+    font-weight: 300;
+    transition: color 0.2s;
+  }
+
+  .product-card:hover .product-spec { color: var(--black); }
+
+  .product-spec::before {
+    content: '';
+    display: block;
+    width: 4px; height: 4px;
+    background: var(--purple);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .products-note {
+    background: var(--white);
+    border-left: 3px solid var(--purple);
+    border-radius: 0 8px 8px 0;
+    padding: 1.2rem 1.6rem;
+    display: flex; align-items: flex-start; gap: 1rem;
+    transition: box-shadow 0.25s;
+  }
+
+  .products-note:hover { box-shadow: 0 4px 20px rgba(111,75,255,0.1); }
+
+  .products-note p {
+    font-size: 0.88rem;
+    color: var(--steel);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .products-note strong { font-weight: 500; color: var(--black); }
+
   /* ── APPROACH ── */
-  #approach { background: var(--canvas); }
+  #approach { background: var(--white); }
 
   .approach-cols {
     display: grid;
@@ -515,16 +780,17 @@
     margin-top: 4rem;
   }
 
-  .approach-steps { display: flex; flex-direction: column; gap: 0; }
-
   .step {
     display: flex; gap: 1.5rem;
     padding: 1.5rem 0;
     border-bottom: 1px solid var(--smoke);
     position: relative;
+    transition: transform 0.25s, padding-left 0.25s;
+    cursor: default;
   }
 
   .step:last-child { border-bottom: none; }
+  .step:hover { transform: translateX(6px); }
 
   .step-num {
     font-family: var(--font-display);
@@ -534,7 +800,7 @@
     line-height: 1;
     flex-shrink: 0;
     width: 48px;
-    transition: color 0.2s;
+    transition: color 0.25s;
   }
 
   .step:hover .step-num { color: var(--purple-light); }
@@ -545,7 +811,10 @@
     color: var(--black);
     margin-bottom: 0.3rem;
     padding-top: 4px;
+    transition: color 0.25s;
   }
+
+  .step:hover .step-body h4 { color: var(--purple); }
 
   .step-body p {
     font-size: 0.85rem;
@@ -565,8 +834,6 @@
     margin-top: 4rem;
   }
 
-  .contact-info { }
-
   .contact-lead {
     font-size: 1rem;
     color: rgba(255,255,255,0.45);
@@ -578,21 +845,31 @@
   .contact-detail {
     display: flex; gap: 1rem; align-items: flex-start;
     margin-bottom: 1.2rem;
+    transition: transform 0.25s;
+    cursor: default;
   }
+
+  .contact-detail:hover { transform: translateX(4px); }
 
   .contact-detail-icon {
     width: 32px; height: 32px; flex-shrink: 0;
     background: rgba(111,75,255,0.12);
     border-radius: 4px;
     display: flex; align-items: center; justify-content: center;
+    transition: background 0.25s;
   }
+
+  .contact-detail:hover .contact-detail-icon { background: rgba(111,75,255,0.3); }
 
   .contact-detail-text {
     font-size: 0.85rem;
     color: rgba(255,255,255,0.55);
     line-height: 1.6;
     font-weight: 300;
+    transition: color 0.25s;
   }
+
+  .contact-detail:hover .contact-detail-text { color: rgba(255,255,255,0.8); }
 
   .contact-detail-text strong {
     display: block;
@@ -616,7 +893,10 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.35);
+    transition: color 0.2s;
   }
+
+  .form-group:focus-within label { color: var(--purple-mid); }
 
   .form-group input,
   .form-group select,
@@ -630,7 +910,7 @@
     font-weight: 300;
     padding: 0.75rem 1rem;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.25s, background 0.25s;
     width: 100%;
   }
 
@@ -640,7 +920,7 @@
   .form-group select:focus,
   .form-group textarea:focus {
     border-color: var(--purple);
-    background: rgba(111,75,255,0.06);
+    background: rgba(111,75,255,0.08);
   }
 
   .form-group textarea { resize: vertical; min-height: 110px; }
@@ -656,125 +936,14 @@
     padding: 0.95rem 2rem;
     border: none; border-radius: 4px;
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
+    transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
     align-self: flex-start;
   }
 
-  .form-submit:hover { background: #5a38e8; transform: translateY(-2px); }
-
-  /* ── PRODUCTS ── */
-  #products { background: var(--white); }
-
-  .products-intro {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: end;
-    margin-bottom: 4rem;
-  }
-
-  .products-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-  }
-
-  .product-card {
-    border: 1px solid var(--smoke);
-    border-radius: 12px;
-    padding: 2.2rem;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.25s, box-shadow 0.25s;
-    background: var(--white);
-  }
-
-  .product-card:hover {
-    border-color: rgba(111,75,255,0.35);
-    box-shadow: 0 4px 24px rgba(111,75,255,0.08);
-  }
-
-  .product-card-accent {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--purple);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
-  }
-
-  .product-card:hover .product-card-accent { transform: scaleX(1); }
-
-  .product-icon {
-    width: 48px; height: 48px;
-    background: var(--purple-light);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 1.4rem;
-  }
-
-  .product-card h3 {
-    font-family: var(--font-display);
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: var(--black);
-    margin-bottom: 0.7rem;
-    line-height: 1.25;
-  }
-
-  .product-card p {
-    font-size: 0.88rem;
-    color: var(--steel);
-    line-height: 1.75;
-    font-weight: 300;
-    margin-bottom: 1.2rem;
-  }
-
-  .product-specs {
-    display: flex; flex-direction: column; gap: 5px;
-  }
-
-  .product-spec {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 0.78rem;
-    color: var(--steel);
-    font-weight: 300;
-  }
-
-  .product-spec::before {
-    content: '';
-    display: block;
-    width: 4px; height: 4px;
-    background: var(--purple);
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .products-note {
-    background: var(--canvas);
-    border-left: 3px solid var(--purple);
-    border-radius: 0 8px 8px 0;
-    padding: 1.2rem 1.6rem;
-    display: flex; align-items: flex-start; gap: 1rem;
-  }
-
-  .products-note p {
-    font-size: 0.88rem;
-    color: var(--steel);
-    line-height: 1.7;
-    font-weight: 300;
-  }
-
-  .products-note strong {
-    font-weight: 500;
-    color: var(--black);
-  }
-
-  @media (max-width: 768px) {
-    .products-intro { grid-template-columns: 1fr; gap: 1.5rem; }
-    .products-grid { grid-template-columns: 1fr; }
+  .form-submit:hover {
+    background: #5a38e8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(111,75,255,0.4);
   }
 
   /* ── FOOTER ── */
@@ -792,13 +961,25 @@
     font-size: 1.1rem;
     font-weight: 900;
     color: rgba(255,255,255,0.5);
+    transition: color 0.25s;
+    cursor: default;
   }
+
+  .footer-logo:hover { color: var(--purple-mid); }
 
   .footer-legal {
     font-size: 0.75rem;
     color: rgba(255,255,255,0.2);
     font-weight: 300;
   }
+
+  .footer-legal a {
+    color: rgba(255,255,255,0.2);
+    text-decoration: none;
+    transition: color 0.25s;
+  }
+
+  .footer-legal a:hover { color: var(--purple-mid); }
 
   .footer-reg {
     font-size: 0.72rem;
@@ -818,10 +999,7 @@
     transition: opacity 0.6s ease, transform 0.6s ease;
   }
 
-  .fade-up.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
@@ -834,6 +1012,8 @@
     .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
     .form-row { grid-template-columns: 1fr; }
     .hero-stats { gap: 2rem; }
+    .products-intro { grid-template-columns: 1fr; gap: 1.5rem; }
+    .products-grid { grid-template-columns: 1fr; }
   }
 
   @media (max-width: 480px) {
@@ -845,8 +1025,14 @@
 
 <!-- NAV -->
 <nav>
-   <a href="#hero" class="nav-logo">
-    <img src="olmako-logo.png" alt="Olmako" height="56" />
+  <!-- ============================================================
+    LOGO — HOW TO REPLACE WITH YOUR OWN FILE:
+    1. Make sure olmako-logo.png is uploaded to the same folder as this file
+    2. The image tag below already points to it — just upload and it works
+    3. Adjust height="44" up or down if needed
+  ============================================================ -->
+  <a href="#hero" class="nav-logo">
+    <img src="olmako-logo.png" alt="Olmako Services Limited" height="44" />
   </a>
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
@@ -861,8 +1047,11 @@
 
 <!-- HERO -->
 <section id="hero">
+  <div class="hero-image-panel">
+    <img src="hero-bg.jpg" alt="Oil and gas facility" loading="lazy"/>
+  </div>
   <div class="hero-inner">
-    <p class="hero-eyebrow">Calgary, Alberta · Engineering & Project Management</p>
+    <p class="hero-eyebrow">Calgary, Alberta · Engineering &amp; Project Management</p>
     <h1>Your project.<br/><em>Our discipline.</em></h1>
     <p class="hero-sub">Olmako Services Ltd. provides integrated engineering, project management, construction management, and procurement support to industrial and energy asset owners across Canada.</p>
     <div class="hero-actions">
@@ -908,7 +1097,6 @@
         <span class="tag">Field Support</span>
       </div>
     </div>
-
     <div class="service-card">
       <p class="service-num">02</p>
       <h3>Project Management Consulting</h3>
@@ -920,7 +1108,6 @@
         <span class="tag">Project Controls</span>
       </div>
     </div>
-
     <div class="service-card">
       <p class="service-num">03</p>
       <h3>Construction Management Support</h3>
@@ -932,7 +1119,6 @@
         <span class="tag">Interface Mgmt</span>
       </div>
     </div>
-
     <div class="service-card">
       <p class="service-num">04</p>
       <h3>Procurement Services</h3>
@@ -949,12 +1135,11 @@
 
 <!-- SECTORS -->
 <section id="sectors">
-  <div class="fade-up">
+  <div class="fade-up" style="position:relative;z-index:1;">
     <p class="section-eyebrow" style="color:var(--purple-mid);">Where we work</p>
     <h2>Built for the sectors<br/>that demand precision.</h2>
     <p class="section-lead">Our delivery model is suited to capital-intensive projects where coordination, schedule visibility, and execution control are non-negotiable.</p>
   </div>
-
   <div class="sectors-grid fade-up">
     <div class="sector-item">
       <div class="sector-icon">
@@ -1001,7 +1186,6 @@
     <p class="section-eyebrow">Why Olmako</p>
     <h2>The case for a single<br/>coordinating partner.</h2>
   </div>
-
   <div class="why-grid fade-up">
     <div class="why-list">
       <div class="why-item">
@@ -1041,45 +1225,14 @@
         </div>
       </div>
     </div>
-
     <div class="why-visual">
       <p class="why-visual-label">Delivery approach</p>
       <div class="delivery-phases">
-        <div class="phase">
-          <div class="phase-dot"></div>
-          <div>
-            <div class="phase-name">Understand client objectives</div>
-            <div class="phase-desc">Scope constraints, priorities, and success criteria defined upfront</div>
-          </div>
-        </div>
-        <div class="phase">
-          <div class="phase-dot"></div>
-          <div>
-            <div class="phase-name">Coordinate stakeholders</div>
-            <div class="phase-desc">Suppliers, contractors, engineers, and owners aligned continuously</div>
-          </div>
-        </div>
-        <div class="phase">
-          <div class="phase-dot"></div>
-          <div>
-            <div class="phase-name">Disciplined planning &amp; tracking</div>
-            <div class="phase-desc">WBS, schedules, budgets, and risk registers maintained actively</div>
-          </div>
-        </div>
-        <div class="phase">
-          <div class="phase-dot"></div>
-          <div>
-            <div class="phase-name">Transparent reporting</div>
-            <div class="phase-desc">Clear communication to all project stakeholders, consistently</div>
-          </div>
-        </div>
-        <div class="phase">
-          <div class="phase-dot"></div>
-          <div>
-            <div class="phase-name">Practical implementation focus</div>
-            <div class="phase-desc">Decisions anchored in execution reality, not theory</div>
-          </div>
-        </div>
+        <div class="phase"><div class="phase-dot"></div><div><div class="phase-name">Understand client objectives</div><div class="phase-desc">Scope constraints, priorities, and success criteria defined upfront</div></div></div>
+        <div class="phase"><div class="phase-dot"></div><div><div class="phase-name">Coordinate stakeholders</div><div class="phase-desc">Suppliers, contractors, engineers, and owners aligned continuously</div></div></div>
+        <div class="phase"><div class="phase-dot"></div><div><div class="phase-name">Disciplined planning &amp; tracking</div><div class="phase-desc">WBS, schedules, budgets, and risk registers maintained actively</div></div></div>
+        <div class="phase"><div class="phase-dot"></div><div><div class="phase-name">Transparent reporting</div><div class="phase-desc">Clear communication to all project stakeholders, consistently</div></div></div>
+        <div class="phase"><div class="phase-dot"></div><div><div class="phase-name">Practical implementation focus</div><div class="phase-desc">Decisions anchored in execution reality, not theory</div></div></div>
       </div>
     </div>
   </div>
@@ -1096,43 +1249,65 @@
   </div>
 
   <div class="products-grid fade-up">
+    <!-- PUMPS CARD -->
     <div class="product-card">
-      <div class="product-card-accent"></div>
-      <div class="product-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="4" stroke="#6f4bff" stroke-width="1.6"/>
-          <path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="#6f4bff" stroke-width="1.6" stroke-linecap="round"/>
-          <path d="M5.64 5.64l2.12 2.12M16.24 16.24l2.12 2.12M5.64 18.36l2.12-2.12M16.24 7.76l2.12-2.12" stroke="#6f4bff" stroke-width="1.4" stroke-linecap="round"/>
-        </svg>
+      <div class="carousel" id="carousel-pumps">
+        <div class="carousel-track" id="track-pumps">
+          <img src="vesta_pump.jpg" alt="Vesta Pump"/>
+          <img src="Vane_Pump.jpg" alt="Vane Pump"/>
+          <img src="610_pump.jpg" alt="API 610 Pump"/>
+        </div>
+        <button class="carousel-btn prev" onclick="moveCarousel('pumps',-1)">&#8249;</button>
+        <button class="carousel-btn next" onclick="moveCarousel('pumps', 1)">&#8250;</button>
+        <div class="carousel-dots" id="dots-pumps">
+          <div class="carousel-dot active" onclick="goToSlide('pumps',0)"></div>
+          <div class="carousel-dot" onclick="goToSlide('pumps',1)"></div>
+          <div class="carousel-dot" onclick="goToSlide('pumps',2)"></div>
+        </div>
       </div>
-      <h3>Industrial Pumps</h3>
-      <p>OEM pumps suited for fluid handling, transfer, injection, and circulation across upstream production facilities, refineries, and pipeline infrastructure.</p>
-      <div class="product-specs">
-        <span class="product-spec">Centrifugal &amp; positive displacement</span>
-        <span class="product-spec">High-pressure &amp; high-temperature rated</span>
-        <span class="product-spec">API 610 / API 676 compliant variants</span>
-        <span class="product-spec">Suitable for hydrocarbons, produced water &amp; chemicals</span>
+      <div class="product-body">
+        <div class="product-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="#6f4bff" stroke-width="1.6"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="#6f4bff" stroke-width="1.6" stroke-linecap="round"/><path d="M5.64 5.64l2.12 2.12M16.24 16.24l2.12 2.12M5.64 18.36l2.12-2.12M16.24 7.76l2.12-2.12" stroke="#6f4bff" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Industrial Pumps</h3>
+        <p>OEM pumps suited for fluid handling, transfer, injection, and circulation across upstream production facilities, refineries, and pipeline infrastructure.</p>
+        <div class="product-specs">
+          <span class="product-spec">Centrifugal &amp; positive displacement</span>
+          <span class="product-spec">High-pressure &amp; high-temperature rated</span>
+          <span class="product-spec">API 610 / API 676 compliant variants</span>
+          <span class="product-spec">Suitable for hydrocarbons, produced water &amp; chemicals</span>
+        </div>
       </div>
     </div>
 
+    <!-- COMPRESSORS CARD -->
     <div class="product-card">
-      <div class="product-card-accent"></div>
-      <div class="product-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="8" width="18" height="8" rx="2" stroke="#6f4bff" stroke-width="1.6"/>
-          <path d="M7 8V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" stroke="#6f4bff" stroke-width="1.6" stroke-linecap="round"/>
-          <path d="M7 16v2a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-2" stroke="#6f4bff" stroke-width="1.6" stroke-linecap="round"/>
-          <circle cx="12" cy="12" r="1.5" fill="#6f4bff"/>
-          <path d="M9 12h1.5M13.5 12H15" stroke="#6f4bff" stroke-width="1.4" stroke-linecap="round"/>
-        </svg>
+      <div class="carousel" id="carousel-comp">
+        <div class="carousel-track" id="track-comp">
+          <img src="Gas_comp.jpg" alt="Gas Compressor"/>
+          <img src="LPG_comp.jpg" alt="LPG Compressor"/>
+          <img src="comp.jpg" alt="Industrial Compressor"/>
+        </div>
+        <button class="carousel-btn prev" onclick="moveCarousel('comp',-1)">&#8249;</button>
+        <button class="carousel-btn next" onclick="moveCarousel('comp', 1)">&#8250;</button>
+        <div class="carousel-dots" id="dots-comp">
+          <div class="carousel-dot active" onclick="goToSlide('comp',0)"></div>
+          <div class="carousel-dot" onclick="goToSlide('comp',1)"></div>
+          <div class="carousel-dot" onclick="goToSlide('comp',2)"></div>
+        </div>
       </div>
-      <h3>Gas Compressors</h3>
-      <p>OEM compressors for gas gathering, compression, boosting, and reinjection applications — built for the reliability requirements of continuous oil and gas operations.</p>
-      <div class="product-specs">
-        <span class="product-spec">Reciprocating &amp; rotary screw types</span>
-        <span class="product-spec">Natural gas, vapour recovery &amp; injection service</span>
-        <span class="product-spec">Skid-mounted &amp; modular configurations</span>
-        <span class="product-spec">API 618 / API 619 compliant variants</span>
+      <div class="product-body">
+        <div class="product-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="8" width="18" height="8" rx="2" stroke="#6f4bff" stroke-width="1.6"/><path d="M7 8V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" stroke="#6f4bff" stroke-width="1.6" stroke-linecap="round"/><path d="M7 16v2a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-2" stroke="#6f4bff" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="1.5" fill="#6f4bff"/><path d="M9 12h1.5M13.5 12H15" stroke="#6f4bff" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Gas Compressors</h3>
+        <p>OEM compressors for gas gathering, compression, boosting, and reinjection applications — built for the reliability requirements of continuous oil and gas operations.</p>
+        <div class="product-specs">
+          <span class="product-spec">Reciprocating &amp; rotary screw types</span>
+          <span class="product-spec">Natural gas, vapour recovery &amp; injection service</span>
+          <span class="product-spec">Skid-mounted &amp; modular configurations</span>
+          <span class="product-spec">API 618 / API 619 compliant variants</span>
+        </div>
       </div>
     </div>
   </div>
@@ -1151,43 +1326,12 @@
       <h2>A structured path to delivery certainty.</h2>
       <p class="section-lead" style="margin-top:1rem;">Our engagement process is designed to build confidence from the first conversation to final close-out.</p>
     </div>
-
     <div class="approach-steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-body">
-          <h4>Project scoping &amp; mobilisation</h4>
-          <p>We map your project objectives, constraints, and stakeholder landscape before committing to a delivery structure.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-body">
-          <h4>Planning &amp; controls setup</h4>
-          <p>Work breakdown structures, schedules, procurement plans, and reporting frameworks are established before execution begins.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-body">
-          <h4>Execution coordination</h4>
-          <p>Active management of engineering, procurement, and construction interfaces throughout the delivery phase.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <div class="step-body">
-          <h4>Monitoring &amp; reporting</h4>
-          <p>Regular progress updates, variance tracking, issue management, and stakeholder communication maintained throughout.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">05</div>
-        <div class="step-body">
-          <h4>Close-out &amp; handover</h4>
-          <p>Systematic close-out coordination, documentation control, and handover support to ensure a clean project conclusion.</p>
-        </div>
-      </div>
+      <div class="step"><div class="step-num">01</div><div class="step-body"><h4>Project scoping &amp; mobilisation</h4><p>We map your project objectives, constraints, and stakeholder landscape before committing to a delivery structure.</p></div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-body"><h4>Planning &amp; controls setup</h4><p>Work breakdown structures, schedules, procurement plans, and reporting frameworks are established before execution begins.</p></div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-body"><h4>Execution coordination</h4><p>Active management of engineering, procurement, and construction interfaces throughout the delivery phase.</p></div></div>
+      <div class="step"><div class="step-num">04</div><div class="step-body"><h4>Monitoring &amp; reporting</h4><p>Regular progress updates, variance tracking, issue management, and stakeholder communication maintained throughout.</p></div></div>
+      <div class="step"><div class="step-num">05</div><div class="step-body"><h4>Close-out &amp; handover</h4><p>Systematic close-out coordination, documentation control, and handover support to ensure a clean project conclusion.</p></div></div>
     </div>
   </div>
 </section>
@@ -1198,11 +1342,9 @@
     <p class="section-eyebrow" style="color:var(--purple-mid);">Get in touch</p>
     <h2>Let's talk about<br/>your next project.</h2>
   </div>
-
   <div class="contact-grid fade-up">
     <div class="contact-info">
       <p class="contact-lead">Whether you have a specific project in mind or want to understand how Olmako can support your asset management programme, we welcome the conversation.</p>
-
       <div class="contact-detail">
         <div class="contact-detail-icon">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2C5.79 2 4 3.79 4 6c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4zm0 5.5A1.5 1.5 0 1 1 8 4a1.5 1.5 0 0 1 0 3.5z" fill="#6f4bff"/></svg>
@@ -1212,27 +1354,15 @@
           58 Belmont Crescent SW<br/>Calgary, AB T2X 4N7, Canada
         </div>
       </div>
-
       <div class="contact-detail">
         <div class="contact-detail-icon">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="#6f4bff" stroke-width="1.4"/><path d="M2 5.5l6 4 6-4" stroke="#6f4bff" stroke-width="1.4" stroke-linecap="round"/></svg>
         </div>
         <div class="contact-detail-text">
-          <strong>General Enquiries</strong>
+          <strong>Email</strong>
           info@olmako.com
         </div>
       </div>
-
-      <div class="contact-detail">
-        <div class="contact-detail-icon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="#6f4bff" stroke-width="1.4"/><path d="M2 5.5l6 4 6-4" stroke="#6f4bff" stroke-width="1.4" stroke-linecap="round"/></svg>
-        </div>
-        <div class="contact-detail-text">
-          <strong>Director</strong>
-          k.matthew@olmako.com
-        </div>
-      </div>
-
       <div class="contact-detail">
         <div class="contact-detail-icon">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#6f4bff" stroke-width="1.4"/><text x="8" y="11" font-size="7" text-anchor="middle" fill="#6f4bff" font-weight="700">AB</text></svg>
@@ -1243,28 +1373,15 @@
         </div>
       </div>
     </div>
-
     <form class="contact-form" onsubmit="handleSubmit(event)">
       <div class="form-row">
-        <div class="form-group">
-          <label>First name</label>
-          <input type="text" placeholder="Oluseyi"/>
-        </div>
-        <div class="form-group">
-          <label>Last name</label>
-          <input type="text" placeholder="Kolade"/>
-        </div>
+        <div class="form-group"><label>First name</label><input type="text" placeholder="First name"/></div>
+        <div class="form-group"><label>Last name</label><input type="text" placeholder="Last name"/></div>
       </div>
+      <div class="form-group"><label>Company</label><input type="text" placeholder="Your company"/></div>
+      <div class="form-group"><label>Email</label><input type="email" placeholder="you@company.com"/></div>
       <div class="form-group">
-        <label>Company</label>
-        <input type="text" placeholder="Shell Canada Energy"/>
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" placeholder="you@company.com"/>
-      </div>
-      <div class="form-group">
-        <label>Service of interest</label>
+        <label>Service or product of interest</label>
         <select>
           <option value="">Select a service or product</option>
           <option>Engineering Services</option>
@@ -1276,10 +1393,7 @@
           <option>Multiple / Not sure yet</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Message</label>
-        <textarea placeholder="Tell us briefly about your project or what you're looking for…"></textarea>
-      </div>
+      <div class="form-group"><label>Message</label><textarea placeholder="Tell us briefly about your project or what you're looking for…"></textarea></div>
       <button type="submit" class="form-submit">Send message →</button>
     </form>
   </div>
@@ -1288,24 +1402,20 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">olmako</div>
-  <div class="footer-legal">© 2025 OLMAKO Services Ltd. All rights reserved. · <a href="#products" style="color:rgba(255,255,255,0.2);text-decoration:none;">OEM Products</a></div>
+  <div class="footer-legal">© 2025 OLMAKO Services Ltd. All rights reserved. · <a href="#products">OEM Products</a></div>
   <div class="footer-reg">Alberta Corp. No. 1379529-2</div>
 </footer>
 
 <script>
-  // Scroll reveal
+  // ── SCROLL REVEAL ──
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
     });
   }, { threshold: 0.1 });
-
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-  // Form
+  // ── FORM SUBMIT ──
   function handleSubmit(e) {
     e.preventDefault();
     const btn = e.target.querySelector('.form-submit');
@@ -1314,22 +1424,53 @@
     btn.disabled = true;
   }
 
-  // Smooth nav highlight
+  // ── NAV ACTIVE HIGHLIGHT ──
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-links a');
-
   window.addEventListener('scroll', () => {
     let current = '';
-    sections.forEach(s => {
-      if (window.scrollY >= s.offsetTop - 100) current = s.id;
-    });
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) current = s.id; });
     navLinks.forEach(a => {
-      a.style.color = a.getAttribute('href') === '#' + current
-        ? '#6f4bff'
-        : 'var(--steel, #6B6B78)';
+      const active = a.getAttribute('href') === '#' + current;
+      a.style.color = active ? '#6f4bff' : '';
     });
   });
-</script>
 
+  // ── CAROUSEL ──
+  const carouselState = {};
+
+  function initCarousel(id, total) {
+    carouselState[id] = { current: 0, total };
+  }
+
+  function moveCarousel(id, dir) {
+    const state = carouselState[id];
+    state.current = (state.current + dir + state.total) % state.total;
+    updateCarousel(id);
+  }
+
+  function goToSlide(id, index) {
+    carouselState[id].current = index;
+    updateCarousel(id);
+  }
+
+  function updateCarousel(id) {
+    const state = carouselState[id];
+    const track = document.getElementById('track-' + id);
+    const dots = document.querySelectorAll('#dots-' + id + ' .carousel-dot');
+    track.style.transform = `translateX(-${state.current * 100}%)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === state.current));
+  }
+
+  // Auto-advance carousels
+  function autoAdvance(id) {
+    moveCarousel(id, 1);
+  }
+
+  initCarousel('pumps', 3);
+  initCarousel('comp', 3);
+  setInterval(() => autoAdvance('pumps'), 4000);
+  setInterval(() => autoAdvance('comp'), 4500);
+</script>
 </body>
 </html>
